@@ -50,8 +50,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 22.1.0
-          cache: "npm"
-          cache-dependency-path: "serveur/package-lock.json"
 
       - name: 📚 Install dependencies
         working-directory: ./serveur
@@ -128,9 +126,7 @@ jobs:
       - name: 📦 Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
-          cache: "yarn"
-          cache-dependency-path: "app/yarn.lock"
+          node-version: 22.1.0
 
       - name: 📚 Install dependencies
         working-directory: ./app
