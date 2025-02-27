@@ -10,6 +10,7 @@ import { LoggerAdapter } from './logger/logger.adapter';
 
 import { ConfigService } from '@nestjs/config';
 
+// ohllala server tests
 export const getApp = async () => {
   const app = await NestFactory.create(AppModule);
   const httpAdapterHost = app.get(HttpAdapterHost);
