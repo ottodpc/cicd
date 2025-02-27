@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { LoggerAdapter } from './logger/logger.adapter';
-import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './configurations/auth.configuration';
 import { DefaultService } from './rest/default';
 import { DefaultApiModule } from './rest/default.api.module';
 import { TodoController } from './controllers/todo.mutation.controller';
@@ -14,14 +12,14 @@ import { ConfigModule } from '@nestjs/config';
 import { ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Todo } from './models/todo';
-import { TodoSchema } from './models/Todo';
+import { TodoSchema } from './models/todo';
 import { MongoConfig } from './configurations/mongo.config';
 import { UserController } from './controllers/user.mutation.controller';
 import { UserQueryController } from './controllers/user.query.controller';
 import { UserRepository } from './repositories/user.repository';
 import { UserService } from './services/user.service';
 import { User } from './models/user';
-import { UserSchema } from './models/User';
+import { UserSchema } from './models/user';
 import appconfiguration from './configurations/app.configuration';
 @Module({
   controllers: [
@@ -34,7 +32,6 @@ import appconfiguration from './configurations/app.configuration';
   ],
   providers: [
     LoggerAdapter,
-    JwtStrategy,
     DefaultService,
     RepositoryUtils,
     TodoService,
@@ -44,7 +41,6 @@ import appconfiguration from './configurations/app.configuration';
     UserRepository,
   ],
   imports: [
-    PassportModule.register({ defaultStrategy: 'jwt' }),
     DefaultApiModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -63,6 +59,6 @@ import appconfiguration from './configurations/app.configuration';
       load: [appconfiguration],
     }),
   ],
-  exports: [LoggerAdapter, PassportModule],
+  exports: [LoggerAdapter],
 })
 export class AppModule {}

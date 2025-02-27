@@ -1,10 +1,10 @@
 export class PageInfo {
-	limit: number
+  limit: number;
 
-	offset: number
+  offset: number;
 
-	constructor(limit: number, offset: number) {
-		this.limit = limit
-		this.offset = offset
-	}
+  constructor(limit: number, offset: number) {
+    this.limit = limit;
+    this.offset = offset;
+  }
 }

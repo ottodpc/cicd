@@ -1,7 +1,7 @@
 export class UserContext {
-	userId: string
+  userId: string;
 
-	constructor(userId: string) {
-		this.userId = userId
-	}
+  constructor(userId: string) {
+    this.userId = userId;
+  }
 }

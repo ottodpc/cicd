@@ -35,7 +35,7 @@ exports[`should test userController should test create method 1`] = `
     "calls": [
       [
         "Location",
-        "/v1/users/de77f73b-34f5-4835-a57e-698ec8539a5b",
+        "/v1/users/5548cb82-3a25-4c15-b65e-e700910822e3",
       ],
     ],
     "results": [

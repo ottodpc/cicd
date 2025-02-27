@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingressname
+  namespace: nsenv
+  annotations:
+    cert-manager.io/issuer: le-issuer
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "10800"
+    nginx.ingress.kubernetes.io/content-security-policy: '"script-src ''self'' ''unsafe-inline'' ''unsafe-eval''; script-src-elem ''self'' ''unsafe-inline''; worker-src ''self'' blob:; child-src ''self'' blob:; img-src ''self'' data: blob:; media-src ''self''; connect-src ''self'' https://* wss://exemple.fr; default-src ''self''; base-uri ''self''; font-src ''self'' https: data:; form-action ''self''; frame-ancestors ''self''; object-src ''none''; script-src-attr ''none''; style-src ''self'' https: ''unsafe-inline'';" always;'
+
+spec:
+  tls:
+    - hosts:
+        - cfainsta.exemple.fr
+      secretName: le-issuer
+  rules:
+    - host: cfainsta.exemple.fr
+      http:
+        paths:
+          - path: /api/?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: cfainstaserverapi-srv
+                port:
+                  number: 4000
+    - host: cfainsta.exemple.fr
+      http:
+        paths:
+          - path: /?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: cfainstaclient-srv
+                port:
+                  number: 8083
+  ingressClassName: nginx

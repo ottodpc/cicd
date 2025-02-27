@@ -1,13 +1,13 @@
 export class SearchQuery {
-	filterName: string
+  filterName: string;
 
-	operation: string
+  operation: string;
 
-	filterValue: any
+  filterValue: any;
 
-	constructor(filterName: string, operation: string, filterValue: any) {
-		this.filterName = filterName
-		this.operation = operation
-		this.filterValue = filterValue
-	}
+  constructor(filterName: string, operation: string, filterValue: any) {
+    this.filterName = filterName;
+    this.operation = operation;
+    this.filterValue = filterValue;
+  }
 }

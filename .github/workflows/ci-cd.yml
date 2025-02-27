@@ -1,0 +1,210 @@
+name: 🚢 Deployment Pipeline
+
+on:
+  push:
+    tags:
+      - "*"
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  detect-changes:
+    name: 🔍 Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      serveur_changed: ${{ steps.changes.outputs.serveur }}
+      app_changed: ${{ steps.changes.outputs.app }}
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 🔄 Detect file changes
+        id: changes
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            serveur:
+              - 'serveur/**'
+            app:
+              - 'app/**'
+
+  build-serveur:
+    name: 🚀 Build & Deploy Server
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.serveur_changed == 'true' || github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📊 Deployment details
+        run: echo "Pipeline run by ${GITHUB_EVENT_NAME} on ${GITHUB_REF_TYPE} ${{github.ref_name}}"
+
+      - name: 📥 Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref_name }}
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.1.0
+          cache: "npm"
+          cache-dependency-path: "serveur/package-lock.json"
+
+      - name: 📚 Install dependencies
+        working-directory: ./serveur
+        run: npm ci
+
+      - name: 🧪 Run tests
+        working-directory: ./serveur
+        run: npm test
+
+      - name: 🐳 Setup Docker Image
+        uses: docker/setup-buildx-action@v2
+        timeout-minutes: 12
+
+      - name: 🔍 Check Docker installation
+        run: docker --version
+
+      - name: 📝 Create Docker daemon.json (if necessary)
+        run: |
+          if [ ! -f /etc/docker/daemon.json ]; then
+            echo '{}' | sudo tee /etc/docker/daemon.json
+          fi
+
+      - name: 🏷️ Extract version from package.json
+        id: extract_version
+        working-directory: ./serveur
+        run: echo "version=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
+
+      - name: 🏗️ Build Docker image
+        run: docker build -t $SERVER_CONTAINER_IMG_NAME:${{ steps.extract_version.outputs.version }} -f ./serveur/docker/Dockerfile.prod ./serveur
+        env:
+          SERVER_CONTAINER_IMG_NAME: ${{ secrets.SERVER_CONTAINER_IMG_NAME }}
+
+      - name: 🔑 Login to Docker Hub
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: 📤 Push Docker image
+        run: docker push $SERVER_CONTAINER_IMG_NAME:${{ steps.extract_version.outputs.version }}
+        env:
+          SERVER_CONTAINER_IMG_NAME: ${{ secrets.SERVER_CONTAINER_IMG_NAME }}
+
+      - name: 🌊 Setup DigitalOcean
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: ⚓ Connect to Kubernetes cluster
+        run: doctl kubernetes cluster kubeconfig save $K8S_CLUSTER_NAME
+        env:
+          K8S_CLUSTER_NAME: ${{ secrets.K8S_CLUSTER_NAME }}
+
+      - name: 🔄 Deploy to Kubernetes
+        run: kubectl rollout restart deployment $K8S_SERVER_DEPLOYMENT_NAME -n nsenv
+        env:
+          K8S_SERVER_DEPLOYMENT_NAME: ${{ secrets.K8S_SERVER_DEPLOYMENT_NAME }}
+
+  build-client:
+    name: 🚀 Build & Deploy Client
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.app_changed == 'true' || github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📊 Deployment details
+        run: echo "Pipeline run by ${GITHUB_EVENT_NAME} on ${GITHUB_REF_TYPE} ${{github.ref_name}}"
+
+      - name: 📥 Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref_name }}
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "yarn"
+          cache-dependency-path: "app/yarn.lock"
+
+      - name: 📚 Install dependencies
+        working-directory: ./app
+        run: yarn install
+
+      - name: 🧪 Run tests
+        working-directory: ./app
+        run: yarn test --passWithNoTests
+
+      - name: 🐳 Setup Docker
+        uses: docker/setup-buildx-action@v2
+        timeout-minutes: 12
+
+      - name: 🏷️ Extract version from package.json
+        id: extract_version
+        working-directory: ./app
+        run: echo "version=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
+
+      - name: 🏗️ Build Docker image
+        run: docker build -t $CLIENT_CONTAINER_IMG_NAME:${{ steps.extract_version.outputs.version }} -f ./app/Dockerfile ./app
+        env:
+          CLIENT_CONTAINER_IMG_NAME: ${{ secrets.CLIENT_CONTAINER_IMG_NAME }}
+
+      - name: 🔑 Login to Docker Hub
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: 📤 Push Docker image
+        run: docker push $CLIENT_CONTAINER_IMG_NAME:${{ steps.extract_version.outputs.version }}
+        env:
+          CLIENT_CONTAINER_IMG_NAME: ${{ secrets.CLIENT_CONTAINER_IMG_NAME }}
+
+      - name: 🌊 Setup DigitalOcean
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: ⚓ Connect to Kubernetes cluster
+        run: doctl kubernetes cluster kubeconfig save $K8S_CLUSTER_NAME
+        env:
+          K8S_CLUSTER_NAME: ${{ secrets.K8S_CLUSTER_NAME }}
+
+      - name: 🔄 Deploy to Kubernetes
+        run: kubectl rollout restart deployment $K8S_CLIENT_DEPLOYMENT_NAME -n nsenv
+        env:
+          K8S_CLIENT_DEPLOYMENT_NAME: ${{ secrets.K8S_CLIENT_DEPLOYMENT_NAME }}
+
+  e2e-tests:
+    name: 🧪 Run End-to-End Tests
+    needs: [build-serveur, build-client]
+    if: ${{ always() && (needs.build-serveur.result == 'success' || needs.build-client.result == 'success') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v3
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+          cache-dependency-path: "e2e/package-lock.json"
+
+      - name: ⏳ Wait for deployments
+        run: sleep 60 # Give services time to fully start
+
+      - name: 📚 Install Cypress and dependencies
+        working-directory: ./e2e
+        run: npm ci
+
+      - name: 🧪 Run E2E tests
+        working-directory: ./e2e
+        run: npm run test:e2e
+        env:
+          CYPRESS_BASE_URL: ${{ secrets.E2E_TEST_URL }}

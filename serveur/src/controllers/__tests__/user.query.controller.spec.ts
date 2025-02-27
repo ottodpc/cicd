@@ -1,8 +1,7 @@
 import { UserService } from '../../services/user.service';
 import { UserQueryController } from '../user.query.controller';
 import { readResourceFromExactPath } from '../../../test/utils';
-import { UserContext } from '../../entities/usercontext';
-import { Context } from '../../entities/context';
+
 describe('should test userQueryController', () => {
   let userQueryController: UserQueryController;
   let userService: UserService;
@@ -25,10 +24,7 @@ describe('should test userQueryController', () => {
           ),
         ),
       );
-    const actualResp = await userQueryController.get(
-      'defaultString',
-      new Context(new UserContext('defaultString'), false),
-    );
+    const actualResp = await userQueryController.get('defaultString');
     expect(jest.spyOn(userService, 'get')).toBeCalledTimes(1);
     expect(actualResp).toMatchSnapshot();
   });
@@ -48,7 +44,6 @@ describe('should test userQueryController', () => {
       'defaultString',
       123,
       123,
-      new Context(new UserContext('defaultString'), false),
     );
     expect(jest.spyOn(userService, 'select')).toBeCalledTimes(1);
     expect(actualResp).toMatchSnapshot();

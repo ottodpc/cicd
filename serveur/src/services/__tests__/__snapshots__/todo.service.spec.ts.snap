@@ -10,8 +10,6 @@ exports[`should test todoService should test create method 1`] = `
 }
 `;
 
-exports[`should test todoService should test delete method 1`] = `undefined`;
-
 exports[`should test todoService should test get method 1`] = `
 {
   "_id": "fugiat Lorem irure",

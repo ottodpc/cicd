@@ -87,10 +87,7 @@ describe('should test userController', () => {
           ),
         ),
       );
-    const actualResp = await userController.delete(
-      'defaultString',
-      new Context(new UserContext('defaultString'), false),
-    );
+    const actualResp = await userController.delete('defaultString');
     expect(jest.spyOn(userService, 'delete')).toBeCalledTimes(1);
     expect(actualResp).toMatchSnapshot();
   });

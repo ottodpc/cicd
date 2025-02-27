@@ -1,8 +1,7 @@
 import { TodoService } from '../../services/todo.service';
 import { TodoQueryController } from '../todo.query.controller';
 import { readResourceFromExactPath } from '../../../test/utils';
-import { UserContext } from '../../entities/usercontext';
-import { Context } from '../../entities/context';
+
 describe('should test todoQueryController', () => {
   let todoQueryController: TodoQueryController;
   let todoService: TodoService;
@@ -25,10 +24,7 @@ describe('should test todoQueryController', () => {
           ),
         ),
       );
-    const actualResp = await todoQueryController.get(
-      'defaultString',
-      new Context(new UserContext('defaultString'), false),
-    );
+    const actualResp = await todoQueryController.get('defaultString');
     expect(jest.spyOn(todoService, 'get')).toBeCalledTimes(1);
     expect(actualResp).toMatchSnapshot();
   });
@@ -48,7 +44,6 @@ describe('should test todoQueryController', () => {
       'defaultString',
       123,
       123,
-      new Context(new UserContext('defaultString'), false),
     );
     expect(jest.spyOn(todoService, 'select')).toBeCalledTimes(1);
     expect(actualResp).toMatchSnapshot();

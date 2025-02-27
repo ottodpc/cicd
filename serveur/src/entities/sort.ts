@@ -1,10 +1,10 @@
 export class Sort {
-	columnName: string
+  columnName: string;
 
-	orderType: string
+  orderType: string;
 
-	constructor(columnName: string, orderType: string) {
-		this.columnName = columnName
-		this.orderType = orderType
-	}
+  constructor(columnName: string, orderType: string) {
+    this.columnName = columnName;
+    this.orderType = orderType;
+  }
 }

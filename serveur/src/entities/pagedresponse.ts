@@ -1,12 +1,12 @@
-import { PageInfo } from './pageinfo'
+import { PageInfo } from './pageinfo';
 
 export class PagedResponse {
-	results: any[]
+  results: any[];
 
-	pageInfo: PageInfo
+  pageInfo: PageInfo;
 
-	constructor(results: any[], pageInfo: PageInfo) {
-		this.results = results
-		this.pageInfo = pageInfo
-	}
+  constructor(results: any[], pageInfo: PageInfo) {
+    this.results = results;
+    this.pageInfo = pageInfo;
+  }
 }

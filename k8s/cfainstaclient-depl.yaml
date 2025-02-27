@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cfainstaclient-depl
+  namespace: nsenv
+  labels:
+    app: cfainstaclient
+    version: "1.0.0"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cfainstaclient
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: cfainstaclient
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3000"
+    spec:
+      containers:
+        - name: cfainstaclient
+          image: cyprienotto/cfainstaclient:latest
+          imagePullPolicy: Always
+          ports:
+            - name: cfainstaclient
+              containerPort: 3000
+          env:
+            - name: REACT_APP_API_URL
+              value: "https://cfainsta.alkwelo.app/api"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cfainstaclient-srv
+  namespace: nsenv
+  labels:
+    app: cfainstaclient
+spec:
+  type: ClusterIP
+  selector:
+    app: cfainstaclient
+  ports:
+    - name: cfainstaclient
+      port: 8083
+      targetPort: 3000

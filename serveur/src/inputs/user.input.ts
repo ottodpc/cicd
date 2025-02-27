@@ -1,17 +1,25 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { Todo } from '../models/todo'
-import { ValidateNested } from 'class-validator'
-import { Type } from 'class-transformer'
+import { ApiProperty } from '@nestjs/swagger';
+import { Todo } from '../models/todo';
+import { ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateUserInput {
-	@ApiProperty()
-	username: string
+  @ApiProperty()
+  username: string;
 
-	@ValidateNested({ each: true })
-	@Type(() => Todo)
-	@ApiProperty({ type: Todo, isArray: true })
-	todos: Todo[]
+  @ValidateNested({ each: true })
+  @Type(() => Todo)
+  @ApiProperty({ type: Todo, isArray: true })
+  todos: Todo[];
 
-	@ApiProperty()
-	password: string[]
+  @ApiProperty()
+  password: string[];
+}
+
+export class LoginInput {
+  @ApiProperty()
+  username: string;
+
+  @ApiProperty()
+  password: string;
 }

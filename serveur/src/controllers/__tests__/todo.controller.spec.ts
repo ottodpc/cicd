@@ -40,7 +40,6 @@ describe('should test todoController', () => {
           __dirname + '/resources/createTodoInput.json',
         ),
       ),
-      new Context(new UserContext('defaultString'), false),
       mockResponse,
     );
     expect(jest.spyOn(mockResponse, 'setHeader')).toBeCalledTimes(1);
@@ -87,10 +86,7 @@ describe('should test todoController', () => {
           ),
         ),
       );
-    const actualResp = await todoController.delete(
-      'defaultString',
-      new Context(new UserContext('defaultString'), false),
-    );
+    const actualResp = await todoController.delete('defaultString');
     expect(jest.spyOn(todoService, 'delete')).toBeCalledTimes(1);
     expect(actualResp).toMatchSnapshot();
   });

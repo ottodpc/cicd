@@ -1,12 +1,12 @@
-import { UserContext } from './usercontext'
+import { UserContext } from './usercontext';
 
 export class Context {
-	userContext: UserContext
+  userContext: UserContext;
 
-	isAuthenticated: boolean
+  isAuthenticated: boolean;
 
-	constructor(userContext: UserContext, isAuthenticated: boolean) {
-		this.userContext = userContext
-		this.isAuthenticated = isAuthenticated
-	}
+  constructor(userContext: UserContext, isAuthenticated: boolean) {
+    this.userContext = userContext;
+    this.isAuthenticated = isAuthenticated;
+  }
 }

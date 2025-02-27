@@ -1,3 +1,3 @@
 export class Health {
-	private readonly status: string = 'up'
+  private readonly status: string = 'up';
 }
