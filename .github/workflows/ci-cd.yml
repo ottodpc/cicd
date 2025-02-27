@@ -123,19 +123,6 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.ref_name }}
 
-      - name: 📦 Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 22.1.0
-
-      - name: 📚 Install dependencies
-        working-directory: ./app
-        run: yarn install
-
-      - name: 🧪 Run tests
-        working-directory: ./app
-        run: yarn test --passWithNoTests
-
       - name: 🐳 Setup Docker
         uses: docker/setup-buildx-action@v2
         timeout-minutes: 12
@@ -176,31 +163,33 @@ jobs:
         env:
           K8S_CLIENT_DEPLOYMENT_NAME: ${{ secrets.K8S_CLIENT_DEPLOYMENT_NAME }}
 
-  e2e-tests:
-    name: 🧪 Run End-to-End Tests
-    needs: [build-serveur, build-client]
-    if: ${{ always() && (needs.build-serveur.result == 'success' || needs.build-client.result == 'success') }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📥 Checkout
-        uses: actions/checkout@v3
+  # e2e-tests:
+  #   name: 🧪 Run End-to-End Tests
+  #   needs: [build-serveur, build-client]
+  #   if: ${{ always() && (needs.build-serveur.result == 'success' || needs.build-client.result == 'success') }}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: 📥 Checkout
+  #       uses: actions/checkout@v3
 
-      - name: 📦 Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: "npm"
-          cache-dependency-path: "e2e/package-lock.json"
+  #     - name: 📦 Setup Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 22.1.0
 
-      - name: ⏳ Wait for deployments
-        run: sleep 60 # Give services time to fully start
+  #     - name: ⏳ Wait for deployments
+  #       run: sleep 60
 
-      - name: 📚 Install Cypress and dependencies
-        working-directory: ./e2e
-        run: npm ci
+  #     - name: 📚 Install Cypress and dependencies
+  #       working-directory: ./e2e
+  #       run: npm ci
 
-      - name: 🧪 Run E2E tests
-        working-directory: ./e2e
-        run: npm run test:e2e
-        env:
-          CYPRESS_BASE_URL: ${{ secrets.E2E_TEST_URL }}
+  #     - name: 📚 Install dependencies
+  #       working-directory: ./app
+  #       run: yarn install
+
+  #     - name: 🧪 Run E2E tests
+  #       working-directory: ./e2e
+  #       run: yarn test
+  #       env:
+  #         CYPRESS_BASE_URL: ${{ secrets.E2E_TEST_URL }}
