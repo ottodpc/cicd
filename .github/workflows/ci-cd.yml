@@ -78,7 +78,9 @@ jobs:
         run: echo "version=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
 
       - name: 🏗️ Build Docker image
-        run: docker build -t $SERVER_CONTAINER_IMG_NAME:${{ steps.extract_version.outputs.version }} -f ./serveur/docker/Dockerfile.prod ./serveur
+        id: build_image_serveur
+        working-directory: ./serveur
+        run: docker build -t $SERVER_CONTAINER_IMG_NAME:latest .
         env:
           SERVER_CONTAINER_IMG_NAME: ${{ secrets.SERVER_CONTAINER_IMG_NAME }}
 
@@ -89,7 +91,7 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: 📤 Push Docker image
-        run: docker push $SERVER_CONTAINER_IMG_NAME:${{ steps.extract_version.outputs.version }}
+        run: docker push $SERVER_CONTAINER_IMG_NAME:latest
         env:
           SERVER_CONTAINER_IMG_NAME: ${{ secrets.SERVER_CONTAINER_IMG_NAME }}
 
@@ -133,7 +135,9 @@ jobs:
         run: echo "version=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
 
       - name: 🏗️ Build Docker image
-        run: docker build -t $CLIENT_CONTAINER_IMG_NAME:${{ steps.extract_version.outputs.version }} -f ./app/Dockerfile ./app
+        id: build_image_client
+        working-directory: ./app
+        run: docker build -t $CLIENT_CONTAINER_IMG_NAME:latest .
         env:
           CLIENT_CONTAINER_IMG_NAME: ${{ secrets.CLIENT_CONTAINER_IMG_NAME }}
 
@@ -144,7 +148,7 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: 📤 Push Docker image
-        run: docker push $CLIENT_CONTAINER_IMG_NAME:${{ steps.extract_version.outputs.version }}
+        run: docker push $CLIENT_CONTAINER_IMG_NAME:latest
         env:
           CLIENT_CONTAINER_IMG_NAME: ${{ secrets.CLIENT_CONTAINER_IMG_NAME }}
 
