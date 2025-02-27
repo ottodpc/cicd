@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should test todoQueryController should test get method 1`] = `
+{
+  "_id": "fugiat Lorem irure",
+  "description": "fugiat Lorem irure",
+  "fugiat00": -16000000,
+  "title": "fugiat Lorem irure",
+  "todoId": "fugiat Lorem irure",
+}
+`;
+
+exports[`should test todoQueryController should test select method 1`] = `
+PagedResponse {
+  "pageInfo": PageInfo {
+    "limit": 123,
+    "offset": 123,
+  },
+  "results": {
+    "_id": "fugiat Lorem irure",
+    "description": "fugiat Lorem irure",
+    "fugiat00": -16000000,
+    "title": "fugiat Lorem irure",
+    "todoId": "fugiat Lorem irure",
+  },
+}
+`;

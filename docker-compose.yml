@@ -1,0 +1,104 @@
+version: "3.8"
+
+services:
+  traefik:
+    image: traefik:latest
+    container_name: traefik
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${PWD}/traefik.yml:/etc/traefik/traefik.yml:ro # Static Configuration
+      - ${PWD}/acme.json:/acme.json:rw # For ACME Let's Encrypt
+      # - ./provider:/provider:ro # Dynamic Configuration Files
+      # - ./traefik.log:/traefik.log:rw
+    env_file: ./env.shared
+    environment:
+      - TZ=Asia/Taipei
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik-secure.entrypoints=websecure"
+      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.${ROOT_DOMAIN}`)"
+      - "traefik.http.routers.traefik-secure.service=api@internal" # This line is important!!! (necessary)
+      - "traefik.http.routers.traefik-secure.tls=true"
+      - "traefik.http.routers.traefik-secure.tls.certresolver=myresolver"
+      - "traefik.http.services.traefik-secure.loadbalancer.server.port=8080"
+      - com.centurylinklabs.watchtower.enable=true
+    networks:
+      - traefik-bridge
+
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: "gitlab-ce"
+    restart: unless-stopped
+    hostname: "gitlab.internal"
+    env_file: ./env.shared
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        ### basic setting
+        external_url 'https://gitlab.${ROOT_DOMAIN}'
+        puma['worker_processes'] = 0
+        gitlab_rails['initial_root_password'] = "${GITLAB_ROOT_PASSWORD}"
+        gitlab_rails['gitlab_shell_ssh_port'] = 22
+        ### network setting
+        nginx['enable'] = false
+        letsencrypt['enable'] = false
+        gitlab_workhorse['enable'] = true
+        gitlab_workhorse['listen_network'] = 'tcp'
+        gitlab_workhorse['listen_addr'] = "0.0.0.0:80"
+        pages_external_url 'https://pages.${ROOT_DOMAIN}'
+        gitlab_pages['enable'] = true
+        gitlab_pages['listen_proxy'] = "0.0.0.0:81"
+        gitlab_pages['access_control'] = true
+        gitlab_pages["namespace_in_path"] = true
+        pages_nginx['enable'] = false 
+        # Container Registry setting
+        registry_external_url 'https://registry.${ROOT_DOMAIN}'
+        gitlab_rails['registry_enabled'] = true
+        gitlab_rails['api_url'] = 'https://registry.${ROOT_DOMAIN}'
+        registry['enable'] = true
+        registry_nginx['enable'] = false
+        registry['registry_http_addr'] = "0.0.0.0:5000"
+    labels:
+      - "traefik.enable=true"
+      # Gitlab itself
+      - "traefik.http.routers.gitlab.entrypoints=websecure"
+      - "traefik.http.routers.gitlab.rule=Host(`gitlab.${ROOT_DOMAIN}`)"
+      - "traefik.http.routers.gitlab.service=gitlab"
+      - "traefik.http.routers.gitlab.tls=true"
+      - "traefik.http.routers.gitlab.tls.certresolver=myresolver"
+      - "traefik.http.services.gitlab.loadbalancer.server.port=80"
+      # Gitlab Pages
+      - "traefik.http.routers.pages.entrypoints=websecure"
+      - "traefik.http.routers.pages.rule=Host(`pages.${ROOT_DOMAIN}`)"
+      - "traefik.http.routers.pages.service=pages"
+      - "traefik.http.routers.pages.tls=true"
+      - "traefik.http.routers.pages.tls.certresolver=myresolver"
+      - "traefik.http.services.pages.loadbalancer.server.port=81"
+      # Gitlab Container Registry
+      - "traefik.http.routers.registry.entrypoints=websecure"
+      - "traefik.http.routers.registry.rule=Host(`registry.${ROOT_DOMAIN}`)"
+      - "traefik.http.routers.registry.service=registry"
+      - "traefik.http.routers.registry.tls=true"
+      - "traefik.http.routers.registry.tls.certresolver=myresolver"
+      - "traefik.http.services.registry.loadbalancer.server.port=5000"
+      # enable watchtower
+      - com.centurylinklabs.watchtower.enable=true
+    ports:
+      - "22:22"
+    volumes:
+      - "config:/etc/gitlab"
+      - "logs:/var/log/gitlab"
+      - "data:/var/opt/gitlab"
+    shm_size: "256m"
+    networks:
+      traefik-bridge:
+volumes:
+  config: {}
+  logs: {}
+  data: {}
+networks:
+  traefik-bridge:
+    name: traefik-bridge

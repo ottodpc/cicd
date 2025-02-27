@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should test userService should test create method 1`] = `
+{
+  "_id": "fugiat Lorem irure",
+  "fugiat00": -16000000,
+  "password": [
+    "fugiat Lorem irure",
+  ],
+  "todos": [
+    {
+      "description": "fugiat Lorem irure",
+      "fugiat00": -16000000,
+      "title": "fugiat Lorem irure",
+      "todoId": "fugiat Lorem irure",
+    },
+  ],
+  "userId": "fugiat Lorem irure",
+  "username": "fugiat Lorem irure",
+}
+`;
+
+exports[`should test userService should test delete method 1`] = `undefined`;
+
+exports[`should test userService should test get method 1`] = `
+{
+  "_id": "fugiat Lorem irure",
+  "fugiat00": -16000000,
+  "password": [
+    "fugiat Lorem irure",
+  ],
+  "todos": [
+    {
+      "description": "fugiat Lorem irure",
+      "fugiat00": -16000000,
+      "title": "fugiat Lorem irure",
+      "todoId": "fugiat Lorem irure",
+    },
+  ],
+  "userId": "fugiat Lorem irure",
+  "username": "fugiat Lorem irure",
+}
+`;
+
+exports[`should test userService should test select method 1`] = `
+[
+  {
+    "_id": "fugiat Lorem irure",
+    "fugiat00": -16000000,
+    "password": [
+      "fugiat Lorem irure",
+    ],
+    "todos": [
+      {
+        "description": "fugiat Lorem irure",
+        "fugiat00": -16000000,
+        "title": "fugiat Lorem irure",
+        "todoId": "fugiat Lorem irure",
+      },
+    ],
+    "userId": "fugiat Lorem irure",
+    "username": "fugiat Lorem irure",
+  },
+]
+`;
+
+exports[`should test userService should test update method 1`] = `
+{
+  "_id": "fugiat Lorem irure",
+  "fugiat00": -16000000,
+  "password": [
+    "fugiat Lorem irure",
+  ],
+  "todos": [
+    {
+      "description": "fugiat Lorem irure",
+      "fugiat00": -16000000,
+      "title": "fugiat Lorem irure",
+      "todoId": "fugiat Lorem irure",
+    },
+  ],
+  "userId": "fugiat Lorem irure",
+  "username": "fugiat Lorem irure",
+}
+`;

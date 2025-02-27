@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should test todoController should test create method 1`] = `
+{
+  "json": [MockFunction] {
+    "calls": [
+      [
+        {
+          "_id": "fugiat Lorem irure",
+          "description": "fugiat Lorem irure",
+          "fugiat00": -16000000,
+          "title": "fugiat Lorem irure",
+          "todoId": "fugiat Lorem irure",
+        },
+      ],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
+  },
+  "setHeader": [MockFunction] {
+    "calls": [
+      [
+        "Location",
+        "/v1/todos/f38fdcce-f566-4e6a-9a60-ae7cb9300fa6",
+      ],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
+  },
+}
+`;
+
+exports[`should test todoController should test delete method 1`] = `undefined`;
+
+exports[`should test todoController should test update method 1`] = `
+{
+  "json": [MockFunction] {
+    "calls": [
+      [
+        {
+          "_id": "fugiat Lorem irure",
+          "description": "fugiat Lorem irure",
+          "fugiat00": -16000000,
+          "title": "fugiat Lorem irure",
+          "todoId": "fugiat Lorem irure",
+        },
+      ],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
+  },
+  "setHeader": [MockFunction] {
+    "calls": [
+      [
+        "Location",
+        "/v1/todos/defaultString",
+      ],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
+  },
+}
+`;

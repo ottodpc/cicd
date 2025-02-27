@@ -1,0 +1,23 @@
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+    network: traefik-bridge
+
+certificatesResolvers:
+  myresolver:
+    acme:
+      email: cyprienotto@outlook.fr
+      storage: "/acme.json"
+      httpChallenge:
+        entryPoint: web
+
+api:
+  dashboard: true
+  insecure: false

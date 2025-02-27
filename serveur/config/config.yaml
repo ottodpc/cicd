@@ -1,0 +1,18 @@
+rest:
+  default:
+    baseurl: https://example.local/api/
+    timeout: 45000
+authentication:
+  enabled: ${AUTHENTICATION_ENABLED:true}
+  bearerJWT:
+    issuerUrl: https://example.com.well-known/jwks.json
+app:
+  port: 4000
+db:
+  mongo:
+    database: todoapp
+    user: 'dotto'
+    password: 'iPzfjoRpdRQ0fhvZ'
+    host: 'cluster0.5tmwa.mongodb.net'
+    port: 27017
+    uri: 'mongodb+srv://dotto:iPzfjoRpdRQ0fhvZ@cluster0.5tmwa.mongodb.net/todoapp?retryWrites=true&w=majority&appName=Cluster0'

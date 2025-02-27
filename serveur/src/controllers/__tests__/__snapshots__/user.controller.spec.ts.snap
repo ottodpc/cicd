@@ -1,0 +1,99 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should test userController should test create method 1`] = `
+{
+  "json": [MockFunction] {
+    "calls": [
+      [
+        {
+          "_id": "fugiat Lorem irure",
+          "fugiat00": -16000000,
+          "password": [
+            "@Bsjkjs67614562hhs",
+          ],
+          "todos": [
+            {
+              "description": "fugiat Lorem irure",
+              "fugiat00": -16000000,
+              "title": "fugiat Lorem irure",
+              "todoId": "fugiat Lorem irure",
+            },
+          ],
+          "userId": "fugiat Lorem irure",
+          "username": "fugiat Lorem irure",
+        },
+      ],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
+  },
+  "setHeader": [MockFunction] {
+    "calls": [
+      [
+        "Location",
+        "/v1/users/de77f73b-34f5-4835-a57e-698ec8539a5b",
+      ],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
+  },
+}
+`;
+
+exports[`should test userController should test delete method 1`] = `undefined`;
+
+exports[`should test userController should test update method 1`] = `
+{
+  "json": [MockFunction] {
+    "calls": [
+      [
+        {
+          "_id": "fugiat Lorem irure",
+          "fugiat00": -16000000,
+          "password": [
+            "@Bsjkjs67614562hhs",
+          ],
+          "todos": [
+            {
+              "description": "fugiat Lorem irure",
+              "fugiat00": -16000000,
+              "title": "fugiat Lorem irure",
+              "todoId": "fugiat Lorem irure",
+            },
+          ],
+          "userId": "fugiat Lorem irure",
+          "username": "fugiat Lorem irure",
+        },
+      ],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
+  },
+  "setHeader": [MockFunction] {
+    "calls": [
+      [
+        "Location",
+        "/v1/users/defaultString",
+      ],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": undefined,
+      },
+    ],
+  },
+}
+`;
