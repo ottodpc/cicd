@@ -1,7 +1,23 @@
 version: "3.8"
+
 services:
-  mongo:
-    image: mongo
-    container_name: mongo-todoapp
-    ports:
-      - 27017:27017
+  serveur:
+    image: ${CI_REGISTRY_IMAGE}/serveur:${CI_COMMIT_REF_SLUG}
+    container_name: "serveur"
+    restart: always
+    env_file: ./.env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.serveur.entrypoints=websecure"
+      - "traefik.http.routers.serveur.rule=Host(`api.${ROOT_DOMAIN}`)"
+      - "traefik.http.routers.serveur.tls=true"
+      - "traefik.http.routers.serveur.tls.certresolver=myresolver"
+      - "traefik.http.services.serveur.loadbalancer.server.port=3000"
+      - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - traefik-bridge
+
+networks:
+  traefik-bridge:
+    external: true
+    name: traefik-bridge
