@@ -106,7 +106,7 @@ jobs:
           K8S_CLUSTER_NAME: ${{ secrets.K8S_CLUSTER_NAME }}
 
       - name: 🔄 Deploy to Kubernetes
-        run: kubectl rollout restart deployment $K8S_SERVER_DEPLOYMENT_NAME -n nsenv
+        run: kubectl rollout restart deployment $K8S_SERVER_DEPLOYMENT_NAME -n appenv
         env:
           K8S_SERVER_DEPLOYMENT_NAME: ${{ secrets.K8S_SERVER_DEPLOYMENT_NAME }}
 
@@ -163,7 +163,7 @@ jobs:
           K8S_CLUSTER_NAME: ${{ secrets.K8S_CLUSTER_NAME }}
 
       - name: 🔄 Deploy to Kubernetes
-        run: kubectl rollout restart deployment $K8S_CLIENT_DEPLOYMENT_NAME -n nsenv
+        run: kubectl rollout restart deployment $K8S_CLIENT_DEPLOYMENT_NAME -n appenv
         env:
           K8S_CLIENT_DEPLOYMENT_NAME: ${{ secrets.K8S_CLIENT_DEPLOYMENT_NAME }}
 
