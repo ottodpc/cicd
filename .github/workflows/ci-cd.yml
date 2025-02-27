@@ -80,7 +80,7 @@ jobs:
       - name: 🏗️ Build Docker image
         id: build_image_serveur
         working-directory: ./serveur
-        run: docker build -t $SERVER_CONTAINER_IMG_NAME:latest .
+        run: docker build -t $SERVER_CONTAINER_IMG_NAME .
         env:
           SERVER_CONTAINER_IMG_NAME: ${{ secrets.SERVER_CONTAINER_IMG_NAME }}
 
@@ -91,7 +91,7 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: 📤 Push Docker image
-        run: docker push $SERVER_CONTAINER_IMG_NAME:latest
+        run: docker push $SERVER_CONTAINER_IMG_NAME
         env:
           SERVER_CONTAINER_IMG_NAME: ${{ secrets.SERVER_CONTAINER_IMG_NAME }}
 
@@ -137,7 +137,7 @@ jobs:
       - name: 🏗️ Build Docker image
         id: build_image_client
         working-directory: ./app
-        run: docker build -t $CLIENT_CONTAINER_IMG_NAME:latest .
+        run: docker build -t $CLIENT_CONTAINER_IMG_NAME .
         env:
           CLIENT_CONTAINER_IMG_NAME: ${{ secrets.CLIENT_CONTAINER_IMG_NAME }}
 
@@ -148,7 +148,7 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: 📤 Push Docker image
-        run: docker push $CLIENT_CONTAINER_IMG_NAME:latest
+        run: docker push $CLIENT_CONTAINER_IMG_NAME
         env:
           CLIENT_CONTAINER_IMG_NAME: ${{ secrets.CLIENT_CONTAINER_IMG_NAME }}
 

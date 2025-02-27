@@ -4,7 +4,7 @@ import Navbar from "./components/Navbar";
 import routes from "./routes";
 import "./index.css";
 
-// hohlala test  cicd
+// hohlala test cicd
 const App: React.FC = () => {
   const routeElement = useRoutes(routes);
 
