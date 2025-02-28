@@ -53,11 +53,11 @@ jobs:
 
       - name: 📚 Install dependencies
         working-directory: ./serveur
-        run: npm ci
+        run: yarn install
 
       - name: 🧪 Run tests
         working-directory: ./serveur
-        run: npm test
+        run: yarn test
 
       - name: 🐳 Setup Docker Image
         uses: docker/setup-buildx-action@v2
